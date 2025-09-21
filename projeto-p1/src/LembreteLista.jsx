@@ -1,4 +1,4 @@
-const Lembrete = (props) => {
+const LembreteLista = (props) => {
   return (
     <div className="card mb-3">
       <div className="card-body d-flex align-items-center">
@@ -13,4 +13,4 @@ const Lembrete = (props) => {
   );
 };
 
-export default Lembrete;
+export default LembreteLista;
