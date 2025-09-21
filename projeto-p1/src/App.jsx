@@ -1,13 +1,24 @@
 import Lembrete from "./Lembrete";
+import Logo from "./Logo";
+import LembreteEntrada from "./LembreteEntrada";
 
 const App = () => {
 
+  const texto = "Adcionar Lembrete"
+  const funcao = () => alert("Lembrete Adcionado")
+
+  const componenteLembreteEntrada = (
+    <LembreteEntrada
+      texto={texto}
+      funcao={funcao}
+    />
+  )
 
   return (
     <div className="container">
       <div className="row">
         <div className="col-12">
-          "Hello, Lembretes"
+          <Logo size='fa-3x'/>
         </div>
       </div>
       <div className='d-flex justify-content-evenly m-2'>
@@ -39,20 +50,9 @@ const App = () => {
         </div>
       </div>
       <div className='d-flex justify-content-evenly m-2'>
-          <input
-          type="text"
-          id="nome"
-          className="form-control"
-          />
-      </div>
-      <div className='d-flex justify-content-evenly m-2'>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick= {() => alert("Lembrete Adcionado!")}>
-              Adcionar Lembrete
-        </button>
-      </div>
+        {componenteLembreteEntrada}
+       </div>
+
     </div>
   )
 }
