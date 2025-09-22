@@ -1,70 +1,80 @@
+import React from "react";
 import LembreteLista from "./LembreteLista";
 import Logo from "./Logo";
 import LembreteEntrada from "./LembreteEntrada";
 
-const App = () => {
+class App extends React.Component {
 
-  const texto = "Adcionar Lembrete"
-  const funcao = () => alert("Lembrete Adcionado")
+  state = {
+    texto: "",        
+    lembretes: []     
+  };
 
-  const componenteLembreteEntrada = (
-    <LembreteEntrada
-      texto={texto}
-      funcao={funcao}
-    />
-  )
+  handleChange = (e) => {
+    this.setState({ texto: e.target.value });
+  };
 
-    const lembretes = [
-    {
-      descricao: 'Preparar aula de programação',
-      icone1: 'fa-regular fa-star',
-      icone2: 'fa-solid fa-trash'
-    },
-    {
-      descricao: 'Fazer feira',
-      icone1: 'fa-regular fa-star',
-      icone2: 'fa-solid fa-trash'
-    },
-    {
-      descricao: 'Prepara Marmitas',
-      icone1: 'fa-regular fa-star',
-      icone2: 'fa-solid fa-trash'
-    }
-    
-  ]
+  adicionarLembrete = () => {
+    const descricao = this.state.texto;
 
-  return (
-    <div className="container">
-      <div className="row">
-        <div className="col-12">
-          <Logo size='fa-3x'/>
-        </div>
-      </div>
-      <div className='d-flex justify-content-evenly m-2'>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick= {() => alert("Apenas Favoritos!")}>
-              Favoritos
-        </button>
-      </div>
-      <div className="row">
-        {lembretes.map(lembrete => (
-          <div className="col-12 col-lg-6 col-xxl-3">
-              <LembreteLista 
-                descricao={lembrete.descricao}
-                icone1={lembrete.icone1}
-                icone2={lembrete.icone2}
-              />
+    const novo = {
+      descricao,
+      icone1: "fa-regular fa-star",
+      icone2: "fa-solid fa-trash",
+    };
+
+    this.setState({
+      lembretes: [novo].concat(this.state.lembretes),
+      texto: ""
+    });
+  };
+
+  render() {
+    const { texto, lembretes } = this.state;
+
+    return (
+      <div className="container">
+        <div className="row my-2">
+          <div className="col-12 text-center">
+            <Logo size="fa-3x" />
           </div>
-        ))}
-      </div>
-      <div className='d-flex justify-content-evenly m-2'>
-        {componenteLembreteEntrada}
-       </div>
+        </div>
 
-    </div>
-  )
+        <div className="d-flex justify-content-evenly m-2">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => alert("Apenas Favoritos!")}
+          >
+            Favoritos
+          </button>
+        </div>
+
+        <div className="d-flex justify-content-evenly m-2">
+          <LembreteEntrada
+            value={texto}
+            onChange={this.handleChange}
+            texto="Adicionar Lembrete"
+            funcao={this.adicionarLembrete}
+          />
+        </div>
+
+        
+        <div className="row">
+          {lembretes.map(lembrete => (
+            <div className="col-12 col-lg-6 col-xxl-3">
+                <LembreteLista 
+                  descricao={lembrete.descricao}
+                  icone1={lembrete.icone1}
+                  icone2={lembrete.icone2}
+                />
+            </div>
+          ))}
+        </div>
+        
+      </div>
+    );
+  }
 }
 
-export default App
+export default App;
