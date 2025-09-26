@@ -4,10 +4,9 @@ import Logo from "./Logo";
 import LembreteEntrada from "./LembreteEntrada";
 
 class App extends React.Component {
-
   state = {
-    texto: "",        
-    lembretes: []     
+    texto: "",
+    lembretes: []
   };
 
   handleChange = (e) => {
@@ -16,17 +15,50 @@ class App extends React.Component {
 
   adicionarLembrete = () => {
     const descricao = this.state.texto;
+    if (!descricao.trim()) return;
 
     const novo = {
       descricao,
+      favorito: false,                 // ✅ começa não-favorito
       icone1: "fa-regular fa-star",
       icone2: "fa-solid fa-trash",
     };
 
-    this.setState({
-      lembretes: [novo].concat(this.state.lembretes),
-      texto: ""
-    });
+    // push sem mutar o estado (novo no topo)
+    const antiga = this.state.lembretes;
+    const copia = [novo];
+    for (let i = 0; i < antiga.length; i++) {
+      copia.push(antiga[i]);
+    }
+
+    this.setState({ lembretes: copia, texto: "" });
+  };
+
+  // ✅ remover com filter, pelo índice
+  excluirLembrete = (indexParaRemover) => {
+    const novaLista = this.state.lembretes.filter((_, i) => i !== indexParaRemover);
+    this.setState({ lembretes: novaLista });
+  };
+
+  // ✅ alternar favorito pelo índice (sem spread / sem mutar)
+  toggleFavorito = (index) => {
+    const atual = this.state.lembretes;
+    const copia = [];
+    for (let i = 0; i < atual.length; i++) {
+      if (i === index) {
+        const item = atual[i];
+        // cria um novo objeto, invertendo o favorito
+        copia.push({
+          descricao: item.descricao,
+          icone1: item.icone1,
+          icone2: item.icone2,
+          favorito: !item.favorito,
+        });
+      } else {
+        copia.push(atual[i]);
+      }
+    }
+    this.setState({ lembretes: copia });
   };
 
   render() {
@@ -59,19 +91,20 @@ class App extends React.Component {
           />
         </div>
 
-        
         <div className="row">
-          {lembretes.map(lembrete => (
-            <div className="col-12 col-lg-6 col-xxl-3">
-                <LembreteLista 
-                  descricao={lembrete.descricao}
-                  icone1={lembrete.icone1}
-                  icone2={lembrete.icone2}
-                />
+          {lembretes.map((lembrete, index) => (
+            <div key={index} className="col-12 col-lg-6 col-xxl-3">
+              <LembreteLista
+                descricao={lembrete.descricao}
+                favorito={lembrete.favorito}                     
+                icone1={lembrete.icone1}
+                icone2={lembrete.icone2}
+                onToggleFavorite={() => this.toggleFavorito(index)}
+                onDelete={() => this.excluirLembrete(index)}      
+              />
             </div>
           ))}
         </div>
-        
       </div>
     );
   }
