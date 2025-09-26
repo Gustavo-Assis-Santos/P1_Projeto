@@ -13,22 +13,16 @@ const LembreteLista = (props) => {
             type="button"
             className="btn btn-link p-0"
             aria-pressed={props.favorito ? "true" : "false"}
-            aria-label={props.favorito ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-            title={props.favorito ? "Desfavoritar" : "Favoritar"}
             onClick={props.onToggleFavorite}
-          >
-            <i className={`${estrela} fa-2x`}></i>
+          >   <i className={`${estrela} fa-2x`}></i>
           </button>
 
           {/* 🗑️ botão para excluir (como já estava) */}
           <button
             type="button"
             className="btn btn-link text-danger p-0"
-            aria-label="Excluir lembrete"
-            title="Excluir"
             onClick={props.onDelete}
-          >
-            <i className={`${props.icone2} fa-2x`}></i>
+          >  <i className={`${props.icone2} fa-2x`}></i>
           </button>
         </div>
       </div>
