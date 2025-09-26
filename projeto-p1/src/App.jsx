@@ -20,7 +20,7 @@ class App extends React.Component {
 
     const novo = {
       descricao,
-      favorito: false,
+      favorito: false,               // começa como não favorito
       icone1: "fa-regular fa-star",
       icone2: "fa-solid fa-trash",
     };
@@ -28,18 +28,20 @@ class App extends React.Component {
     // push sem mutar o estado (novo no topo)
     const antiga = this.state.lembretes;
     const copia = [novo];
-    for (let i = 0; i < antiga.length; i++) copia.push(antiga[i]);
+    for (let i = 0; i < antiga.length; i++) {
+      copia.push(antiga[i]);
+    }
 
     this.setState({ lembretes: copia, texto: "" });
   };
 
-  // remover com filter, pelo índice do array original
+  // remover usando filter pelo índice ORIGINAL
   excluirLembrete = (indexParaRemover) => {
     const novaLista = this.state.lembretes.filter((_, i) => i !== indexParaRemover);
     this.setState({ lembretes: novaLista });
   };
 
-  // alternar favorito pelo índice do array original
+  // alternar favorito pelo índice ORIGINAL (sem mutar)
   toggleFavorito = (index) => {
     const atual = this.state.lembretes;
     const copia = [];
@@ -59,7 +61,6 @@ class App extends React.Component {
     this.setState({ lembretes: copia });
   };
 
-  // define o filtro ativo
   setFiltro = (filtro) => {
     this.setState({ filtro });
   };
@@ -67,11 +68,10 @@ class App extends React.Component {
   render() {
     const { texto, lembretes, filtro } = this.state;
 
-    // aplica o filtro para decidir o que mostrar
-    const visiveis =
-      filtro === "favoritos"
-        ? lembretes.filter((l) => l.favorito)
-        : lembretes;
+    // carrega {item, index} para não precisar de indexOf depois
+    const visiveis = lembretes
+      .map((item, index) => ({ item, index }))
+      .filter(({ item }) => (filtro === "favoritos" ? item.favorito : true));
 
     return (
       <div className="container">
@@ -113,23 +113,18 @@ class App extends React.Component {
 
         {/* Lista (já filtrada) */}
         <div className="row">
-          {visiveis.map((item) => {
-            
-            const indexOriginal = lembretes.indexOf(item);
-
-            return (
-              <div key={indexOriginal} className="col-12 col-lg-6 col-xxl-3">
-                <LembreteLista
-                  descricao={item.descricao}
-                  favorito={item.favorito}
-                  icone1={item.icone1}
-                  icone2={item.icone2}
-                  onToggleFavorite={() => this.toggleFavorito(indexOriginal)}
-                  onDelete={() => this.excluirLembrete(indexOriginal)}
-                />
-              </div>
-            );
-          })}
+          {visiveis.map(({ item, index }) => (
+            <div key={index} className="col-12 col-lg-6 col-xxl-3">
+              <LembreteLista
+                descricao={item.descricao}
+                favorito={item.favorito}
+                icone1={item.icone1}
+                icone2={item.icone2}
+                onToggleFavorite={() => this.toggleFavorito(index)}
+                onDelete={() => this.excluirLembrete(index)}
+              />
+            </div>
+          ))}
         </div>
       </div>
     );
